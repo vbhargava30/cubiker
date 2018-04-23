@@ -2,6 +2,8 @@ package edu.illinois.cs.cs125.chambanabiker;
 
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -43,4 +45,23 @@ public class Home extends FragmentActivity implements OnMapReadyCallback {
         mMap.addMarker(new MarkerOptions().position(chambana).title("Campustown Center"));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(chambana));
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.homemenu, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    // handle button activities
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == R.id.mybutton) {
+            // do something here
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+
 }
