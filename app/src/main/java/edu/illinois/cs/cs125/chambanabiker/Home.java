@@ -14,9 +14,12 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 public class Home extends AppCompatActivity implements OnMapReadyCallback {
+
+    public boolean isDark = false;
 
     private  GoogleMap mMap;
 
@@ -64,6 +67,25 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback {
                 dialog.show();
 
                 break;
+            }
+
+            case R.id.changemode: {
+                if (!isDark) {
+                    MapStyleOptions nightStyle = MapStyleOptions.
+                            loadRawResourceStyle(this, R.raw.mapstyle_night);
+
+                    mMap.setMapStyle(nightStyle);
+
+                    isDark = true;
+
+                } else {
+                    MapStyleOptions lightStyle = MapStyleOptions.
+                            loadRawResourceStyle(this, R.raw.mapstyle_light);
+
+                    mMap.setMapStyle(lightStyle);
+
+                    isDark = false;
+                }
             }
         }
         return super.onOptionsItemSelected(item);

@@ -1,7 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/changemode"
+        android:title="Toggle Light/Dark Mode">
+    </item>
+
     <item
         android:id="@+id/about"
         android:title="About Chambana Biker">
     </item>
+
+
 </menu>
