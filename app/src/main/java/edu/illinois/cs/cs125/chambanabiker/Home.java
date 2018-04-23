@@ -1,11 +1,13 @@
 package edu.illinois.cs.cs125.chambanabiker;
 
-import android.support.v4.app.FragmentActivity;
+import android.app.Dialog;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -16,7 +18,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 public class Home extends AppCompatActivity implements OnMapReadyCallback {
 
-    private GoogleMap mMap;
+    private  GoogleMap mMap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,7 +27,7 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback {
 
         //Setup the toolbar.
 
-        Toolbar myToolBar = (Toolbar) findViewById(R.id.my_toolbar);
+        Toolbar myToolBar = findViewById(R.id.my_toolbar);
         setSupportActionBar(myToolBar);
 
 
@@ -33,6 +35,8 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback {
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
+
     }
 
     /**
@@ -43,6 +47,26 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu, menu);
         return super.onCreateOptionsMenu(menu);
+    }
+
+    /**
+     * When the menu item is clicked.
+     */
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.about: {
+                Dialog dialog = new Dialog(this);
+
+                dialog.setContentView(R.layout.popup);
+
+                dialog.show();
+
+                break;
+            }
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     /**
@@ -62,6 +86,11 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback {
         LatLng chambana = new LatLng(40.106309, -88.227198);
         mMap.addMarker(new MarkerOptions().position(chambana).title("Campustown Center"));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(chambana));
+
+        //Zoom and autofit.
+
+        mMap.moveCamera(CameraUpdateFactory.
+                newLatLngZoom(new LatLng(40.106309, -88.227198), 14.0f));
     }
 
 }
