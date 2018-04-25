@@ -1,6 +1,9 @@
 package edu.illinois.cs.cs125.chambanabiker;
 
+import android.app.ActionBar;
 import android.app.Dialog;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -23,15 +26,19 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback {
 
     private  GoogleMap mMap;
 
+    Toolbar myToolBar;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
+
         //Setup the toolbar.
 
-        Toolbar myToolBar = findViewById(R.id.my_toolbar);
-        setSupportActionBar(myToolBar);
+        this.myToolBar = findViewById(R.id.my_toolbar);
+        setSupportActionBar(this.myToolBar);
 
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
@@ -70,26 +77,37 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback {
             }
 
             case R.id.changemode: {
-                if (!isDark) {
-                    MapStyleOptions nightStyle = MapStyleOptions.
-                            loadRawResourceStyle(this, R.raw.mapstyle_night);
-
-                    mMap.setMapStyle(nightStyle);
-
-                    isDark = true;
-
-                } else {
-                    MapStyleOptions lightStyle = MapStyleOptions.
-                            loadRawResourceStyle(this, R.raw.mapstyle_light);
-
-                    mMap.setMapStyle(lightStyle);
-
-                    isDark = false;
-                }
+               changeMapStyle();
             }
         }
         return super.onOptionsItemSelected(item);
     }
+
+
+    /**
+     * Change map style
+     */
+
+    public void changeMapStyle() {
+        if (!isDark) {
+            MapStyleOptions nightStyle = MapStyleOptions.
+                    loadRawResourceStyle(this, R.raw.mapstyle_night);
+
+            mMap.setMapStyle(nightStyle);
+
+            isDark = true;
+
+        } else {
+            MapStyleOptions lightStyle = MapStyleOptions.
+                    loadRawResourceStyle(this, R.raw.mapstyle_light);
+
+            mMap.setMapStyle(lightStyle);
+
+            isDark = false;
+        }
+
+    }
+
 
     /**
      * Manipulates the map once available.
