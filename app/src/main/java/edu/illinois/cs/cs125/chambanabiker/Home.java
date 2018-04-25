@@ -2,15 +2,22 @@ package edu.illinois.cs.cs125.chambanabiker;
 
 import android.app.ActionBar;
 import android.app.Dialog;
+import android.content.Context;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -28,9 +35,11 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback {
 
     Toolbar myToolBar;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        //General initialization.
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
@@ -40,14 +49,57 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback {
         this.myToolBar = findViewById(R.id.my_toolbar);
         setSupportActionBar(this.myToolBar);
 
+        //Check security.
+
+
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
+        //Button listeners.
+
+
+
 
     }
+
+    /**
+     * On click for the nearest rack button.
+     *
+     * @param view the current view.
+     */
+    public void nearestRack(View view) {
+        String message = "Clicked Nearest Rack!";
+
+        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
+    }
+
+
+    /**
+     * On click for the set location button.
+     * @param view the current view.
+     */
+    public void setLocation(View view) {
+
+        String message = "Clicked Set Location!";
+
+        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
+    }
+
+
+    /**
+     * On click for the clear location button.
+     * @param view the current view.
+     */
+
+    public void clearLocation(View view) {
+        String message = "Clicked Clear Location!";
+
+        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
+    }
+
 
     /**
      * Sets up the menu.
