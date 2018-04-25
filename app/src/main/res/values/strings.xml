@@ -4,4 +4,7 @@
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
     <string name="title_activity_home">Chambana Biker</string>
+    <string name="nearest_rack">Nearest Rack</string>
+    <string name="set_location">Set Location</string>
+    <string name="clear_location">Clear Location</string>
 </resources>
