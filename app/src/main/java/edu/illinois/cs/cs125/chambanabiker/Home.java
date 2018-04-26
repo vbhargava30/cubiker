@@ -27,6 +27,11 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+
 public class Home extends AppCompatActivity implements OnMapReadyCallback {
 
     public boolean isDark = false;
@@ -172,6 +177,9 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback {
      */
     @Override
     public void onMapReady(GoogleMap googleMap) {
+        JsonObject rootObj = parser.parse(R.raw.bikeracks).getAsJsonObject();
+        JsonArray formObj = rootObj.getAsJsonArray("tags");
+
         mMap = googleMap;
 
         // Add a marker in Chambana and move the camera
