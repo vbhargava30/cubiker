@@ -27,6 +27,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
@@ -105,13 +106,16 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback {
             int n;
             while ((n = reader.read(buffer)) != -1) {
                 writer.write(buffer, 0, n);
+
             }
-        } finally {
             is.close();
+        } catch (IOException e) {
+
+            return null;
+
         }
 
-        String jsonString = writer.toString();
-        return jsonString;
+        return writer.toString();
     }
 
     /**
@@ -119,17 +123,31 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback {
      * @param json String version of json
      */
 
-    public void parseJson(String json) {
+    public String[][] parseJson(String json) {
         JsonParser parser = new JsonParser();
         JsonObject rootObj = parser.parse(json).getAsJsonObject();
         JsonArray formObj = rootObj.getAsJsonArray("locations");
+        String[] latStorage = new String[formObj.size()];
+        String[] longStorage = new String[formObj.size()];
+        String[] descriptionStorage = new String[formObj.size()];
+        String[][] latLongStorage = new String[3][formObj.size()];
+
+
         for (int i = 0; i < formObj.size(); i++) {
             JsonElement res = formObj.get(i);
             JsonObject result = res.getAsJsonObject();
-            String lat = result.get("lat").getAsString();
-            String lng = result.get("lng").getAsString();
+            descriptionStorage[i] = result.get("name").getAsString();
+            latStorage[i] = result.get("lat").getAsString();
+            longStorage[i] = result.get("lng").getAsString();
         }
-    }
+
+        latLongStorage[0] = latStorage;
+
+        latLongStorage[1] = longStorage;
+
+        latLongStorage[2] = descriptionStorage;
+
+        return latLongStorage;
     }
 
 
@@ -228,7 +246,8 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback {
 
         }
 
-        
+
+
 
        // Add a marker in Chambana and move the camera
         LatLng chambana = new LatLng(40.106309, -88.227198);
