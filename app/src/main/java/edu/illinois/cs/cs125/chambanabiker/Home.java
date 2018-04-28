@@ -41,7 +41,11 @@ import java.io.Writer;
 public class Home extends AppCompatActivity implements OnMapReadyCallback {
 
     private static final int MY_PERMISSIONS_REQUEST_FINE_LOCATION = 0;
-    public boolean isDark = false;
+
+    private boolean isDark = false;
+
+    private boolean isLocationSet = getPreferences(MODE_PRIVATE).getBoolean("isLocationSet",
+            false);
 
     private  GoogleMap mMap;
 
@@ -100,6 +104,10 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback {
      */
     public void setLocation(View view) {
 
+        if (isLocationSet) {
+            return;
+        }
+
         String message = "Setting Location...";
 
         Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
@@ -119,6 +127,8 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback {
                 .position(new LatLng(latitude, longitude))
                 .title("Your bike's location")
                 .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)));
+
+        getPreferences(MODE_PRIVATE).edit().putBoolean("isLocationSet", true).apply();
     }
 
     public String jsonToString() {
@@ -184,6 +194,10 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback {
         String message = "Clearing Location...";
 
         Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
+
+        getPreferences(MODE_PRIVATE).edit().putBoolean("isLocationSet", false).apply();
+
+
     }
 
 
@@ -309,7 +323,8 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback {
 
         float longitudeBike = getPreferences(MODE_PRIVATE).getFloat("longitude", 0);
 
-        if (latitudeBike != 0 && longitudeBike != 0) {
+        if (latitudeBike != 0 && longitudeBike != 0
+                && isLocationSet) {
             mMap.addMarker(new MarkerOptions()
                     .position(new LatLng(latitudeBike, longitudeBike))
                     .title("Your bike's location")
