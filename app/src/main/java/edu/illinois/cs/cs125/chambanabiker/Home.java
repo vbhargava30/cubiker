@@ -21,6 +21,18 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.io.StringWriter;
+import java.io.Writer;
+
 public class Home extends AppCompatActivity implements OnMapReadyCallback {
 
     private static final int MY_PERMISSIONS_REQUEST_FINE_LOCATION = 0;
@@ -82,6 +94,42 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback {
         String message = "Setting Location...";
 
         Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
+    }
+
+    public String jsontostring() {
+        InputStream is = getResources().openRawResource(R.raw.bikeracks);
+        Writer writer = new StringWriter();
+        char[] buffer = new char[1024];
+        try {
+            Reader reader = new BufferedReader(new InputStreamReader(is, "UTF-8"));
+            int n;
+            while ((n = reader.read(buffer)) != -1) {
+                writer.write(buffer, 0, n);
+            }
+        } finally {
+            is.close();
+        }
+
+        String jsonString = writer.toString();
+        return jsonString;
+    }
+
+    /**
+     *
+     * @param json String version of json
+     */
+
+    public void parseJson(String json) {
+        JsonParser parser = new JsonParser();
+        JsonObject rootObj = parser.parse(json).getAsJsonObject();
+        JsonArray formObj = rootObj.getAsJsonArray("locations");
+        for (int i = 0; i < formObj.size(); i++) {
+            JsonElement res = formObj.get(i);
+            JsonObject result = res.getAsJsonObject();
+            String lat = result.get("lat").getAsString();
+            String lng = result.get("lng").getAsString();
+        }
+    }
     }
 
 
