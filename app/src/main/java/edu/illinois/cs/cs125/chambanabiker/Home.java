@@ -16,8 +16,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -231,6 +229,28 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback {
 
     }
 
+    public double[] findUserLocation() {
+
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED) {
+            locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+
+            Criteria criteria = new Criteria();
+
+            provider = locationManager.getBestProvider(criteria, true);
+
+            Location location = locationManager.getLastKnownLocation(provider);
+
+            double latitude = location.getLatitude();
+
+            double longitude = location.getLongitude();
+
+            return new double[] {latitude, longitude};
+        }
+
+        return null;
+    }
+
 
     /**
      * Manipulates the map once available.
@@ -242,7 +262,11 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback {
     @Override
     public void onMapReady(GoogleMap googleMap) {
 
+        //Draw map.
+
         mMap = googleMap;
+
+        //Security and add blue location marker.
 
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED) {
@@ -254,21 +278,14 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback {
 
         //Find user location and center map on their location with zoom.
 
-        locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+        double[] latLong = findUserLocation();
 
-        Criteria criteria = new Criteria();
+        if (findUserLocation() != null) {
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latLong[0], latLong[1]),
+                    17.0f));
 
-        provider = locationManager.getBestProvider(criteria, true);
-
-        Location location = locationManager.getLastKnownLocation(provider);
-
-        double latitude = location.getLatitude();
-
-        double longitude = location.getLongitude();
-
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latitude, longitude),
-                17.0f));
-
+        }
+       
         //Setup markers.
 
         String[][] latLongAndDescriptions = parseJson(jsonToString());
