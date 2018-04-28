@@ -1,17 +1,11 @@
 package edu.illinois.cs.cs125.chambanabiker;
 
-import android.app.ActionBar;
+import android.Manifest;
 import android.app.Dialog;
-import android.content.Context;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
-import android.location.Location;
-import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -29,6 +23,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 public class Home extends AppCompatActivity implements OnMapReadyCallback {
 
+    private static final int MY_PERMISSIONS_REQUEST_FINE_LOCATION = 0;
     public boolean isDark = false;
 
     private  GoogleMap mMap;
@@ -51,17 +46,18 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback {
 
         //Check security.
 
-
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_DENIED) {
+            ActivityCompat.requestPermissions(this, new String[] {
+                    Manifest.permission.ACCESS_FINE_LOCATION},
+                    MY_PERMISSIONS_REQUEST_FINE_LOCATION
+                    );
+        }
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-
-        //Button listeners.
-
-
-
 
     }
 
@@ -71,7 +67,7 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback {
      * @param view the current view.
      */
     public void nearestRack(View view) {
-        String message = "Clicked Nearest Rack!";
+        String message = "Finding Nearest Rack...";
 
         Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
     }
@@ -83,7 +79,7 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback {
      */
     public void setLocation(View view) {
 
-        String message = "Clicked Set Location!";
+        String message = "Setting Location...";
 
         Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
     }
@@ -95,7 +91,7 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback {
      */
 
     public void clearLocation(View view) {
-        String message = "Clicked Clear Location!";
+        String message = "Clearing Location...";
 
         Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
     }
@@ -161,6 +157,8 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback {
     }
 
 
+
+
     /**
      * Manipulates the map once available.
      * This callback is triggered when the map is ready to be used.
@@ -175,7 +173,16 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback {
 
         mMap = googleMap;
 
-        // Add a marker in Chambana and move the camera
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED) {
+
+            mMap.setMyLocationEnabled(true);
+
+        }
+
+        
+
+       // Add a marker in Chambana and move the camera
         LatLng chambana = new LatLng(40.106309, -88.227198);
         mMap.addMarker(new MarkerOptions().position(chambana).title("Campustown Center"));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(chambana));
