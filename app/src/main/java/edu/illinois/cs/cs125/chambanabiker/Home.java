@@ -20,6 +20,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -102,6 +103,22 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback {
         String message = "Setting Location...";
 
         Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
+
+        double[] latAndLong = findUserLocation();
+
+        float latitude = (float) latAndLong[0];
+
+        float longitude = (float) latAndLong[1];
+
+
+        getPreferences(MODE_PRIVATE).edit().putFloat("latitude", latitude).apply();
+
+        getPreferences(MODE_PRIVATE).edit().putFloat("longitude", longitude).apply();
+
+        mMap.addMarker(new MarkerOptions()
+                .position(new LatLng(latitude, longitude))
+                .title("Your bike's location")
+                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)));
     }
 
     public String jsonToString() {
@@ -285,8 +302,23 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback {
                     17.0f));
 
         }
-       
-        //Setup markers.
+
+        //Setup bike marker if available.
+
+        float latitudeBike = getPreferences(MODE_PRIVATE).getFloat("latitude", 0);
+
+        float longitudeBike = getPreferences(MODE_PRIVATE).getFloat("longitude", 0);
+
+        if (latitudeBike != 0 && longitudeBike != 0) {
+            mMap.addMarker(new MarkerOptions()
+                    .position(new LatLng(latitudeBike, longitudeBike))
+                    .title("Your bike's location")
+                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)));
+
+        }
+
+
+        //Setup JSON markers.
 
         String[][] latLongAndDescriptions = parseJson(jsonToString());
 
