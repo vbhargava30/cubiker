@@ -106,7 +106,7 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback {
         Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
     }
 
-    public String jsontostring() {
+    public String jsonToString() {
         InputStream is = getResources().openRawResource(R.raw.bikeracks);
         Writer writer = new StringWriter();
         char[] buffer = new char[1024];
@@ -232,8 +232,6 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback {
     }
 
 
-
-
     /**
      * Manipulates the map once available.
      * This callback is triggered when the map is ready to be used.
@@ -255,7 +253,7 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback {
 
 
         //Find user location and center map on their location with zoom.
-        
+
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
 
         Criteria criteria = new Criteria();
@@ -270,5 +268,25 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback {
 
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latitude, longitude),
                 17.0f));
+
+        //Setup markers.
+
+        String[][] latLongAndDescriptions = parseJson(jsonToString());
+
+        for (int i = 0; i < latLongAndDescriptions.length; i++) {
+
+            double latitudeTemp = Double.valueOf(latLongAndDescriptions[0][i]);
+
+            double longitudeTemp = Double.valueOf(latLongAndDescriptions[1][i]);
+
+            String description = latLongAndDescriptions[2][i];
+
+            mMap.addMarker(new MarkerOptions()
+                    .position(new LatLng(latitudeTemp, longitudeTemp))
+                    .title(description));
+
+        }
+
+
     }
 }

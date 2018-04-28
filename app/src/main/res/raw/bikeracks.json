@@ -1,29 +1,19 @@
 {
   "locations" : [
     {
-      "key": "fence1",
+      "name": "Illini Union North: 24 racks",
+      "lat": 40.109941,
+      "lng":  -88.227692
+    },
+    {
+      "name": "Illini Union South: 45 racks",
+      "lat": 40.108945,
+      "lng":  -88.227427
+    },
+    {
       "name": "Some geofence",
       "lat": 77.12332,
-      "lng": 23.456,
-      "radius": 1000,
-      "audio_file": "my_tune.mp3"
-
-    },
-    {
-      "key": "fence1",
-      "name": "Some geofence",
-      "lat": 70.12332,
-      "lng": 20.456,
-      "radius": 1000,
-      "audio_file": "my_tune.mp3"
-    },
-    {
-      "key": "fence1",
-      "name": "Some geofence",
-      "lat": 90.12332,
-      "lng": 10.456,
-      "radius": 1000,
-      "audio_file": "my_tune.mp3"
+      "lng": 23.456
     }
   ]
 
