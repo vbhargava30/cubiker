@@ -3,6 +3,9 @@ package edu.illinois.cs.cs125.chambanabiker;
 import android.Manifest;
 import android.app.Dialog;
 import android.content.pm.PackageManager;
+import android.location.Criteria;
+import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -13,6 +16,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -42,6 +47,10 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback {
     private  GoogleMap mMap;
 
     Toolbar myToolBar;
+
+    String provider;
+
+    LocationManager locationManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -228,8 +237,6 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback {
     /**
      * Manipulates the map once available.
      * This callback is triggered when the map is ready to be used.
-     * This is where we can add markers or lines, add listeners or move the camera. In this case,
-     * we just add a marker near Sydney, Australia.
      * If Google Play services is not installed on the device, the user will be prompted to install
      * it inside the SupportMapFragment. This method will only be triggered once the user has
      * installed Google Play services and returned to the app.
@@ -247,17 +254,21 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback {
         }
 
 
+        //Find user location and center map on their location with zoom.
+        
+        locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
 
+        Criteria criteria = new Criteria();
 
-       // Add a marker in Chambana and move the camera
-        LatLng chambana = new LatLng(40.106309, -88.227198);
-        mMap.addMarker(new MarkerOptions().position(chambana).title("Campustown Center"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(chambana));
+        provider = locationManager.getBestProvider(criteria, true);
 
-        //Zoom and autofit.
+        Location location = locationManager.getLastKnownLocation(provider);
 
-        mMap.moveCamera(CameraUpdateFactory.
-                newLatLngZoom(new LatLng(40.106309, -88.227198), 14.0f));
+        double latitude = location.getLatitude();
+
+        double longitude = location.getLongitude();
+
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latitude, longitude),
+                17.0f));
     }
-
 }
