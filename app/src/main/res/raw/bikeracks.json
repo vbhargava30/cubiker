@@ -1,19 +1,28 @@
 {
   "locations" : [
     {
-      "name": "Illini Union North: 24 racks",
+      "name": "Illini Union North",
       "lat": 40.109941,
-      "lng":  -88.227692
+      "lng":  -88.227692,
+      "number": 24
     },
     {
-      "name": "Illini Union South: 45 racks",
+      "name": "Illini Union South",
       "lat": 40.108945,
-      "lng":  -88.227427
+      "lng":  -88.227427,
+      "number": 45
     },
     {
-      "name": "Engineering Hall: 22 racks",
+      "name": "Engineering Hall",
       "lat": 40.110720,
-      "lng": -88.227412
+      "lng": -88.227412,
+      "number": 22
+    },
+    {
+      "name": "Googleplex",
+      "lat": 37.4220,
+      "lng": -122.0841,
+      "number": 42
     }
   ]
 

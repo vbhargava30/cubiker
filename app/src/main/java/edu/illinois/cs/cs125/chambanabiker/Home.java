@@ -3,6 +3,7 @@ package edu.illinois.cs.cs125.chambanabiker;
 import android.Manifest;
 import android.app.Dialog;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
@@ -30,6 +31,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.koushikdutta.ion.Ion;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -38,6 +40,7 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.StringWriter;
 import java.io.Writer;
+import java.util.concurrent.ExecutionException;
 
 public class Home extends AppCompatActivity implements OnMapReadyCallback {
 
@@ -182,7 +185,8 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback {
         String[] latStorage = new String[formObj.size()];
         String[] longStorage = new String[formObj.size()];
         String[] descriptionStorage = new String[formObj.size()];
-        String[][] latLongStorage = new String[3][formObj.size()];
+        String[] numberRacks = new String[formObj.size()];
+        String[][] latLongStorage = new String[4][formObj.size()];
 
 
         for (int i = 0; i < formObj.size(); i++) {
@@ -191,6 +195,7 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback {
             descriptionStorage[i] = result.get("name").getAsString();
             latStorage[i] = result.get("lat").getAsString();
             longStorage[i] = result.get("lng").getAsString();
+            numberRacks[i] = result.get("number").getAsString();
         }
 
         latLongStorage[0] = latStorage;
@@ -198,6 +203,8 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback {
         latLongStorage[1] = longStorage;
 
         latLongStorage[2] = descriptionStorage;
+
+        latLongStorage[3] = numberRacks;
 
         return latLongStorage;
     }
@@ -358,12 +365,11 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback {
 
         }
 
-
         //Setup JSON markers.
 
         String[][] latLongAndDescriptions = parseJson(jsonToString());
 
-        for (int i = 0; i < latLongAndDescriptions.length; i++) {
+        for (int i = 0; i < latLongAndDescriptions[0].length; i++) {
 
             double latitudeTemp = Double.valueOf(latLongAndDescriptions[0][i]);
 
@@ -371,9 +377,27 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback {
 
             String description = latLongAndDescriptions[2][i];
 
-            mMap.addMarker(new MarkerOptions()
-                    .position(new LatLng(latitudeTemp, longitudeTemp))
-                    .title(description));
+            int numberRacks = Integer.valueOf(latLongAndDescriptions[3][i]);
+
+            String url = "https://raw.githubusercontent.com/Concept211/Google-Maps-Markers/master/images/marker_red"
+                    + Integer.toString(numberRacks) + ".png";
+
+            try {
+             Bitmap iconImg = Ion.with(this).
+                     load(url)
+                     .asBitmap().get();
+
+             iconImg = Bitmap.createScaledBitmap(iconImg, 80, 135, true);
+
+             mMap.addMarker(new MarkerOptions()
+                     .position(new LatLng(latitudeTemp, longitudeTemp))
+                     .title(description)
+                     .icon(BitmapDescriptorFactory.fromBitmap(iconImg)));
+            } catch (InterruptedException e){
+                e.printStackTrace();
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            }
 
         }
 
