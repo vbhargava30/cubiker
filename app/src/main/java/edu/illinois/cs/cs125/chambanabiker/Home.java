@@ -62,6 +62,37 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback {
 
     Marker[] latLongMarkers;
 
+    public void goToUserLocation() {
+        double[] latLong = findUserLocation();
+
+        if (findUserLocation() != null) {
+            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latLong[0], latLong[1]),
+                    17.0f));
+        }
+    }
+
+
+    public double[] findUserLocation() {
+
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED) {
+            locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+
+            Criteria criteria = new Criteria();
+
+            provider = locationManager.getBestProvider(criteria, true);
+
+            Location location = locationManager.getLastKnownLocation(provider);
+
+            double latitude = location.getLatitude();
+
+            double longitude = location.getLongitude();
+
+            return new double[] {latitude, longitude};
+        }
+
+        return null;
+    }
 
 
     @Override
@@ -94,9 +125,9 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback {
                 == PackageManager.PERMISSION_DENIED) {
             ActivityCompat.requestPermissions(this, new String[] {
                     Manifest.permission.ACCESS_FINE_LOCATION},
-                    MY_PERMISSIONS_REQUEST_FINE_LOCATION
-                    );
+                    MY_PERMISSIONS_REQUEST_FINE_LOCATION);
         }
+
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -333,29 +364,7 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback {
         }
 
     }
-    
 
-    public double[] findUserLocation() {
-
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-                == PackageManager.PERMISSION_GRANTED) {
-            locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-
-            Criteria criteria = new Criteria();
-
-            provider = locationManager.getBestProvider(criteria, true);
-
-            Location location = locationManager.getLastKnownLocation(provider);
-
-            double latitude = location.getLatitude();
-
-            double longitude = location.getLongitude();
-
-            return new double[] {latitude, longitude};
-        }
-
-        return null;
-    }
 
 
     /**
@@ -384,13 +393,8 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback {
 
         //Find user location and center map on their location with zoom.
 
-        double[] latLong = findUserLocation();
+        goToUserLocation();
 
-        if (findUserLocation() != null) {
-            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latLong[0], latLong[1]),
-                    17.0f));
-
-        }
 
         //Setup bike marker if available.
 
