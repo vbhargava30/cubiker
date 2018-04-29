@@ -23,6 +23,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import com.google.gson.JsonArray;
@@ -44,8 +45,7 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback {
 
     private boolean isDark = false;
 
-    private boolean isLocationSet = getPreferences(MODE_PRIVATE).getBoolean("isLocationSet",
-            false);
+    private boolean isLocationSet = false;
 
     private  GoogleMap mMap;
 
@@ -55,6 +55,8 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback {
 
     LocationManager locationManager;
 
+    Marker bikeMarker;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -62,6 +64,16 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+
+
+        //isLocationSet initialization.
+
+        if (getPreferences(MODE_PRIVATE).contains("isLocationSet")) {
+
+            isLocationSet = getPreferences(MODE_PRIVATE).getBoolean("isLocationSet",
+                    false);
+
+        }
 
 
         //Setup the toolbar.
@@ -104,13 +116,15 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback {
      */
     public void setLocation(View view) {
 
-        if (isLocationSet) {
+        if (getPreferences(MODE_PRIVATE).contains("isLocationSet")
+                && getPreferences(MODE_PRIVATE).getBoolean("isLocationSet",
+                false)) {
             return;
         }
 
         String message = "Setting Location...";
 
-        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
+        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
 
         double[] latAndLong = findUserLocation();
 
@@ -123,7 +137,7 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback {
 
         getPreferences(MODE_PRIVATE).edit().putFloat("longitude", longitude).apply();
 
-        mMap.addMarker(new MarkerOptions()
+        bikeMarker = mMap.addMarker(new MarkerOptions()
                 .position(new LatLng(latitude, longitude))
                 .title("Your bike's location")
                 .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)));
@@ -193,10 +207,18 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback {
     public void clearLocation(View view) {
         String message = "Clearing Location...";
 
-        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
+        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
 
-        getPreferences(MODE_PRIVATE).edit().putBoolean("isLocationSet", false).apply();
 
+        if (getPreferences(MODE_PRIVATE).contains("isLocationSet")
+                && getPreferences(MODE_PRIVATE).getBoolean("isLocationSet",
+                false)) {
+            getPreferences(MODE_PRIVATE).edit().putBoolean("isLocationSet", false).apply();
+        }
+
+
+
+        bikeMarker.remove();
 
     }
 
@@ -325,7 +347,7 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback {
 
         if (latitudeBike != 0 && longitudeBike != 0
                 && isLocationSet) {
-            mMap.addMarker(new MarkerOptions()
+            bikeMarker = mMap.addMarker(new MarkerOptions()
                     .position(new LatLng(latitudeBike, longitudeBike))
                     .title("Your bike's location")
                     .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)));
