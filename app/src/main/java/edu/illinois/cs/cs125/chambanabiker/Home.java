@@ -119,6 +119,10 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback {
         if (getPreferences(MODE_PRIVATE).contains("isLocationSet")
                 && getPreferences(MODE_PRIVATE).getBoolean("isLocationSet",
                 false)) {
+            String message = "Already set a location!";
+
+            Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+
             return;
         }
 
