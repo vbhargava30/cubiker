@@ -60,6 +60,10 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback {
 
     Marker bikeMarker;
 
+    Marker[] latLongMarkers;
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -106,12 +110,12 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback {
      *
      * @param view the current view.
      */
-    public String[] nearestRack(View view) {
+    public void nearestRack(View view) {
         String message = "Finding Nearest Rack...";
 
         Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
         String closest[] = new String[3];
-        double bestdist = Double.MAX_VALUE;
+        double bestDist = Double.MAX_VALUE;
         String[][] latLongAndDescriptions = parseJson(jsonToString());
         double latitude = findUserLocation()[0];
         double longitude = findUserLocation()[1];
@@ -122,14 +126,23 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback {
             String description = latLongAndDescriptions[2][i];
 
             double distance = (Math.pow((latitude - latitudeTemp), 2) + Math.pow((longitude - longitudeTemp), 2));
-            if (distance < bestdist) {
-                bestdist = distance;
+            if (distance < bestDist) {
+                bestDist = distance;
                 closest[0] = latLongAndDescriptions[0][i];
                 closest[1] = latLongAndDescriptions[1][i];
                 closest[2] = description;
             }
         }
-        return closest;
+
+        for (int i = 0; i < latLongMarkers.length; i++) {
+            if (latLongMarkers[i].getTitle().equals(closest[2])) {
+                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLongMarkers[i].getPosition(), 17.0f));
+                latLongMarkers[i].showInfoWindow();
+                return;
+            }
+        }
+
+
     }
 
 
@@ -246,7 +259,6 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback {
                 false)) {
             getPreferences(MODE_PRIVATE).edit().putBoolean("isLocationSet", false).apply();
         }
-
 
 
         bikeMarker.remove();
@@ -386,9 +398,16 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback {
 
         }
 
+
+
+
         //Setup JSON markers.
 
         String[][] latLongAndDescriptions = parseJson(jsonToString());
+
+        //Array of LatLng objects to save pointers to each rack marker.
+
+        latLongMarkers = new Marker[latLongAndDescriptions[0].length];
 
         for (int i = 0; i < latLongAndDescriptions[0].length; i++) {
 
@@ -410,10 +429,12 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback {
 
              iconImg = Bitmap.createScaledBitmap(iconImg, 80, 135, true);
 
-             mMap.addMarker(new MarkerOptions()
+             latLongMarkers[i] = mMap.addMarker(new MarkerOptions()
                      .position(new LatLng(latitudeTemp, longitudeTemp))
                      .title(description)
                      .icon(BitmapDescriptorFactory.fromBitmap(iconImg)));
+
+
             } catch (InterruptedException e){
                 e.printStackTrace();
             } catch (ExecutionException e) {
