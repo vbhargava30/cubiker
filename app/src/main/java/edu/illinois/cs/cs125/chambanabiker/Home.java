@@ -134,10 +134,10 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback {
             }
         }
 
-        for (int i = 0; i < latLongMarkers.length; i++) {
-            if (latLongMarkers[i].getTitle().equals(closest[2])) {
-                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLongMarkers[i].getPosition(), 17.0f));
-                latLongMarkers[i].showInfoWindow();
+        for (Marker marker : latLongMarkers) {
+            if (marker.getTitle().equals(closest[2])) {
+                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(marker.getPosition(), 17.0f));
+                marker.showInfoWindow();
                 return;
             }
         }
@@ -249,6 +249,13 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback {
      */
 
     public void clearLocation(View view) {
+
+        if (bikeMarker == null) {
+            String message = "Location already cleared!";
+            Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         String message = "Clearing Location...";
 
         Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
@@ -262,6 +269,8 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback {
 
 
         bikeMarker.remove();
+
+        bikeMarker = null;
 
     }
 

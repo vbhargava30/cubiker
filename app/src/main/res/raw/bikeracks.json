@@ -19,10 +19,70 @@
       "number": 22
     },
     {
-      "name": "Googleplex",
-      "lat": 37.4220,
-      "lng": -122.0841,
-      "number": 42
+      "name": "Undergraduate Library",
+      "lat": 40.104591,
+      "lng": -88.227141,
+      "number": 48
+    },
+    {
+      "name": "Altgeld Hall South",
+      "lat": 40.108852,
+      "lng": -88.228132,
+      "number": 75
+    },
+    {
+      "name": "Digital Computer Laboratory East",
+      "lat": 40.113052,
+      "lng": -88.225734,
+      "number": 12
+    },
+    {
+      "name": "Digital Computer Laboratory North",
+      "lat": 40.113573,
+      "lng": -88.226306,
+      "number": 84
+    },
+    {
+      "name": "Siebel Center Northeast",
+      "lat": 40.114173,
+      "lng": -88.224264,
+      "number": 31
+    },
+    {
+      "name": "Siebel Center Southwest",
+      "lat": 40.113679,
+      "lng": -88.225457,
+      "number": 33
+    },
+    {
+      "name": "NCSA Southwest",
+      "lat": 40.114558,
+      "lng": -88.225463,
+      "number": 23
+    },
+    {
+      "name": "ECEB North",
+      "lat": 40.115388,
+      "lng": -88.228553,
+      "number": 53
+    },
+    {
+      "name": "ACES Funk South",
+      "lat": 40.102521,
+      "lng": -88.225106,
+      "number": 47
+    },
+    {
+      "name": "Architecture Building South",
+      "lat": 40.103151,
+      "lng": -88.228946,
+      "number": 27
+    },
+    {
+      "name": "Grainger Southwest",
+      "lat": 40.112204,
+      "lng": -88.227851,
+      "number": 33
     }
   ]
 
