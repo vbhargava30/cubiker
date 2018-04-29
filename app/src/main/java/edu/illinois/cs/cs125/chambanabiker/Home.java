@@ -106,10 +106,30 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback {
      *
      * @param view the current view.
      */
-    public void nearestRack(View view) {
+    public String[] nearestRack(View view) {
         String message = "Finding Nearest Rack...";
 
         Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
+        String closest[] = new String[3];
+        double bestdist = Double.MAX_VALUE;
+        String[][] latLongAndDescriptions = parseJson(jsonToString());
+        double latitude = findUserLocation()[0];
+        double longitude = findUserLocation()[1];
+
+        for (int i = 0; i < latLongAndDescriptions.length; i++) {
+            double latitudeTemp = Double.valueOf(latLongAndDescriptions[0][i]);
+            double longitudeTemp = Double.valueOf(latLongAndDescriptions[1][i]);
+            String description = latLongAndDescriptions[2][i];
+
+            double distance = (Math.pow((latitude - latitudeTemp), 2) + Math.pow((longitude - longitudeTemp), 2));
+            if (distance < bestdist) {
+                bestdist = distance;
+                closest[0] = latLongAndDescriptions[0][i];
+                closest[1] = latLongAndDescriptions[1][i];
+                closest[2] = description;
+            }
+        }
+        return closest;
     }
 
 
@@ -292,6 +312,7 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback {
         }
 
     }
+    
 
     public double[] findUserLocation() {
 
