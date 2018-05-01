@@ -44,7 +44,7 @@ import java.util.concurrent.ExecutionException;
 
 public class Home extends AppCompatActivity implements OnMapReadyCallback {
 
-    private static final int MY_PERMISSIONS_REQUEST_FINE_LOCATION = 0;
+    private static final int MY_PERMISSIONS_REQUEST = 0;
 
     private boolean isDark = false;
 
@@ -75,6 +75,8 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback {
     public double[] findUserLocation() {
 
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED
+                && ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED) {
             locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
 
@@ -122,10 +124,12 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback {
         //Check security.
 
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_DENIED
+                && ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
                 == PackageManager.PERMISSION_DENIED) {
             ActivityCompat.requestPermissions(this, new String[] {
-                    Manifest.permission.ACCESS_FINE_LOCATION},
-                    MY_PERMISSIONS_REQUEST_FINE_LOCATION);
+                    Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION},
+                    MY_PERMISSIONS_REQUEST);
         }
 
 
@@ -384,6 +388,8 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback {
         //Security and add blue location marker.
 
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED
+                && ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED) {
 
             mMap.setMyLocationEnabled(true);
