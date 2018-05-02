@@ -4,9 +4,6 @@ import android.Manifest;
 import android.app.Dialog;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.location.Criteria;
-import android.location.Location;
-import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -42,6 +39,8 @@ import java.io.StringWriter;
 import java.io.Writer;
 import java.util.concurrent.ExecutionException;
 
+import im.delight.android.location.SimpleLocation;
+
 public class Home extends AppCompatActivity implements OnMapReadyCallback {
 
     private static final int MY_PERMISSIONS_REQUEST = 0;
@@ -52,11 +51,9 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback {
 
     private  GoogleMap mMap;
 
+    private SimpleLocation location;
+
     Toolbar myToolBar;
-
-    String provider;
-
-    LocationManager locationManager;
 
     Marker bikeMarker;
 
@@ -78,13 +75,6 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback {
                 == PackageManager.PERMISSION_GRANTED
                 && ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED) {
-            locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-
-            Criteria criteria = new Criteria();
-
-            provider = locationManager.getBestProvider(criteria, true);
-
-            Location location = locationManager.getLastKnownLocation(provider);
 
             double latitude = location.getLatitude();
 
@@ -97,6 +87,7 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback {
     }
 
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -104,7 +95,6 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-
 
         //isLocationSet initialization.
 
@@ -114,7 +104,6 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback {
                     false);
 
         }
-
 
         //Setup the toolbar.
 
@@ -130,8 +119,12 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback {
             ActivityCompat.requestPermissions(this, new String[] {
                     Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION},
                     MY_PERMISSIONS_REQUEST);
+
+
         }
 
+
+        location = new SimpleLocation(this);
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -155,7 +148,7 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback {
         double latitude = findUserLocation()[0];
         double longitude = findUserLocation()[1];
 
-        for (int i = 0; i < latLongAndDescriptions.length; i++) {
+        for (int i = 0; i < latLongAndDescriptions[0].length; i++) {
             double latitudeTemp = Double.valueOf(latLongAndDescriptions[0][i]);
             double longitudeTemp = Double.valueOf(latLongAndDescriptions[1][i]);
             String description = latLongAndDescriptions[2][i];
@@ -394,6 +387,7 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback {
 
             mMap.setMyLocationEnabled(true);
 
+            location.beginUpdates();
         }
 
 
